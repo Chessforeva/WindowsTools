@@ -264,17 +264,14 @@ void get_file_attributes(char *output, WIN32_FIND_DATA *find_data) {
     if (find_data->dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
         file_permissions[0] = 'd';
     }
-    SYSTEMTIME stUTC, stLocal;
-    FileTimeToSystemTime(&find_data->ftLastWriteTime, &stUTC);
-    SystemTimeToTzSpecificLocalTime(NULL, &stUTC, &stLocal);
-    char month[4];
-    const char *months[] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
-    sprintf(month, "%s", months[stLocal.wMonth - 1]);
-    char date[20];
-    sprintf(date, "%s %02d %02d:%02d", month, stLocal.wDay, stLocal.wHour, stLocal.wMinute);
+    static char formatted_time[30];
+    SYSTEMTIME st;
+    FileTimeToSystemTime(&find_data->ftLastWriteTime, &st); // Now using FileTimeToSystemTime
+    char* months[] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+    sprintf(formatted_time, "%s %02d %04d %02d:%02d", months[st.wMonth - 1], st.wDay, st.wYear, st.wHour, st.wMinute);
     //unsigned long long size = ((unsigned long long)find_data->nFileSizeHigh << 32) | find_data->nFileSizeLow;
     DWORD size = find_data->nFileSizeLow;    // 4GB
-    sprintf(output, "%s    1 user     group %12llu %s %s\r\n", file_permissions, size, date, find_data->cFileName);
+    sprintf(output, "%s    1 user     group %12lu %s %s\r\n", file_permissions, size, formatted_time, find_data->cFileName);
 }
 
 void list_directory() {

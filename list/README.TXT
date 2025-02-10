@@ -10,8 +10,11 @@ Also, when encoded filenames appeared in XP, there was not UTF8 standard and
 NTFS 2-byte character filenames in various encodings for different languages
  have "splitted" programming C functions as
  CreateDirectoryA (8-bit), CreateDirectoryW (16-bit), and lots of others, of course.
-Encodings become a mess of unknown tables. Even folder selection using an old 8-bit function
-was impossible for 2-byte folders, the system returned "File or folder not found".
+Encodings became a mess of tables - ascii, ansi, latin, windows, koi, iso, etc.
+
+The selection and opening of a folder or a file became risky using an old 8-bit
+function for these 2-byte character names, the system could open or
+simply return a error "File or folder not found".
 
 So, introducing tools:
 
