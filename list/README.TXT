@@ -6,9 +6,9 @@ Modern windows can list all files and folder by using command
 
 Older windows could not do it properly.
 The dir command was DOS based 8 chars max. and produced filenames as C:\Progra~1\...
-Also, when encoded filenames appeared in XP, there was not UTF8 standard and
-NTFS 2-byte character filenames in various encodings for different languages
- have "splitted" programming C functions as
+on a FAT disk. UTF wasn't the main standard till XP (or NT) times, as I remember.
+NTFS introduced 2-byte character filenames in various encodings for different languages.
+This have "splitted" programming C functions as
  CreateDirectoryA (8-bit), CreateDirectoryW (16-bit), and lots of others, of course.
 Encodings became a mess of tables - ascii, ansi, latin, windows, koi, iso, etc.
 
