@@ -52,8 +52,8 @@ int transfer_mode = 0; // 0 = ASCII, 1 = Binary
 WSADATA wsa_data;
 SOCKET server_sock = INVALID_SOCKET, client_sock = INVALID_SOCKET;
 SOCKET data_sock = INVALID_SOCKET, pasv_sock = INVALID_SOCKET;
-char app_directory[MAX_PATH];
-char working_directory[MAX_PATH] = "C:\\";
+char app_directory[3000];
+char working_directory[3000] = "C:\\";
 
 #define p_fLOGGEDIN 1
 #define p_fREAD 2
@@ -169,7 +169,7 @@ void safefilename(char *path) {
     norm_filename(path);
     removeslashes(path);
     removestartdots(path);
-    GetCurrentDirectoryA(MAX_PATH, pathbuf);
+    GetCurrentDirectoryA(3000, pathbuf);
     removelastslash(pathbuf);
     strcat(pathbuf,"/");
     strcat(pathbuf,path);    
@@ -337,7 +337,7 @@ void nlst() {
 }
 
 void pwd() {
-    GetCurrentDirectoryA(MAX_PATH, pathbuf);
+    GetCurrentDirectoryA(3000, pathbuf);
     printf("get current: %s\n",pathbuf);
     toremotepath(pathbuf);
     sprintf(buffer, "257 \"%s\" is the current directory\r\n", pathbuf);
@@ -471,7 +471,7 @@ int setpathinternal( char *folder ) {
         good = 0;
         for( int drive = 1; drive < 26; drive++ ) {
             if( _chdrive( drive ) == 0 ) {
-                GetCurrentDirectoryA(MAX_PATH,buff2);
+                GetCurrentDirectoryA(3000,buff2);
                 int c1 = *c; if(c1 >= 97) c1 -= 32; *c = (char)c1;
                 if( *a == *c ) {
                     good = 1;
@@ -483,7 +483,7 @@ int setpathinternal( char *folder ) {
     if( good ) {
         good = ( SetCurrentDirectoryA(folder) ? 1 : 0 );
         }
-    GetCurrentDirectoryA(MAX_PATH, working_directory);
+    GetCurrentDirectoryA(3000, working_directory);
     printf("currently: %s\n", working_directory);
     return good;
 }
@@ -502,16 +502,16 @@ void setfolder( char *folder ) {
         send_response("550 Failed to change directory\r\n");
     }
     // verify to be sure
-    GetCurrentDirectoryA(MAX_PATH, pathbuf);
+    GetCurrentDirectoryA(3000, pathbuf);
     if( strncmp( pathbuf, working_directory, strlen(working_directory) ) != 0 ) {
         goroot();
     }
-    GetCurrentDirectoryA(MAX_PATH, pathbuf);
+    GetCurrentDirectoryA(3000, pathbuf);
     printf("set current: %s\n",pathbuf);
 }
 
 void cdup() {
-    GetCurrentDirectoryA(MAX_PATH, pathbuf);
+    GetCurrentDirectoryA(3000, pathbuf);
     norm_filename(pathbuf);
     if (strcmp(pathbuf, working_directory) == 0) {
         send_response("250 Already at root directory\r\n");
@@ -535,7 +535,7 @@ void cwd(char *path) {
             return;
         }
         if( strcmp( pathbuf, "/" )==0 ) {
-            GetCurrentDirectoryA(MAX_PATH, pathbuf);
+            GetCurrentDirectoryA(3000, pathbuf);
             toremotepath(pathbuf);
             if ( strcmp( pathbuf, "/" )==0 ) {
                 send_response("250 Already at root directory\r\n");
@@ -863,7 +863,7 @@ void hello() {
 
 int main(int argc, char **argv) {
     hello();
-    GetModuleFileNameA(NULL, app_directory, MAX_PATH);
+    GetModuleFileNameA(NULL, app_directory, 3000);
     *(strrchr(app_directory, '\\')) = '\0';
     strcpy( working_directory, app_directory ); 
     WSAStartup(MAKEWORD(2, 2), &wsa_data);

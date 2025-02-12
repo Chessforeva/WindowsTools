@@ -1,4 +1,4 @@
-Intended to observe the content of an old PC.
+Intended to observe the content of an old PC. Or a new one.
 
 Modern windows can list all files and folder by using command
 
@@ -8,13 +8,13 @@ Older windows could not do it properly.
 The dir command was DOS based 8 chars max. and produced filenames as C:\Progra~1\...
 on a FAT disk. UTF8 wasn't the main standard till XP times, as I remember.
 NTFS introduced 2-byte character filenames in various encodings for different languages.
-This have "splitted" programming C functions as
+This had "splitted" programming C functions into two cases as
  CreateDirectoryA (8-bit), CreateDirectoryW (16-bit), and lots of others, of course.
 Encodings became a mess of tables - ascii, ansi, latin, windows, koi, iso, etc.
 
-The selection and opening of a folder or a file became risky using an old 8-bit
-function for these 2-byte character names, the system could open or
-simply return a error "File or folder not found".
+The selection and opening of a folder or a file became tricky when using an old 8-bit
+function for these 2-byte character names, the system could open a file or
+simply return an error "File or folder not found".
 
 So, introducing tools:
 
