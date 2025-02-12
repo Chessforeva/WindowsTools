@@ -44,7 +44,7 @@ Renaming sets normal file permission attributes automatically, try first.
 If filenames contain "?" in lists then it means files have been saved using
 Windows 2-byte encoding, which is much different to the ascii table.
 This tool is 8-bit and maybe not the best choice then. If such named files too many.
-During times people spent much resources developing encoding convertion rich user interfaces.
+During times people spent much resources developing encoding conversion rich user interfaces.
 There were plenty of functions (ending W as SetCurrentDirectoryW) developed later
 which should be used. But normally ascii was used naming files.
 Some language encodings, as latin, are close to ascii, but some really technically encoded.

@@ -1,8 +1,8 @@
 /*
 
- DIR *.* /s /a:h > DLIST.TXT
-
-  for Windows XP long file names
+ DIR *.* /S > DLIST.TXT
+  for Windows long file names
+  on old PC as Win95,98,XP
   
  2-byte encoded filenames, not 8-bit
  
@@ -44,7 +44,7 @@ void list_file_folder( WIN32_FIND_DATAW *find_data ) {
     SYSTEMTIME st;
     FileTimeToSystemTime( &find_data->ftLastWriteTime, &st); // Now using FileTimeToSystemTime    
     DWORD size = find_data->nFileSizeLow;    // under 4GB
-    fwprintf(file, L"%c %12lu %ls %02d %04d %ls\n", attrib[0], size, months[st.wMonth-1], st.wDay, st.wYear, find_data->cFileName);
+    fwprintf(file, L"%c%c %12lu %ls %02d %04d %ls\n", attrib[0], attrib[1], size, months[st.wMonth-1], st.wDay, st.wYear, find_data->cFileName);
 }
 
 int save_file_folder( WIN32_FIND_DATAW *find_data ) {

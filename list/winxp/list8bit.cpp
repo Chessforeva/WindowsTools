@@ -44,7 +44,7 @@ void list_file_folder( WIN32_FIND_DATAA *find_data ) {
     sprintf(formshort_time, "%s %02d %04d", months[st.wMonth-1], st.wDay, st.wYear);
     DWORD size = find_data->nFileSizeLow;    // under 4GB
     //fprintf(file, "%s %s %12lu %s %s\n", dir, attrib, size, formatted_time, find_data->cFileName);
-    fprintf(file, "%c %12lu %s %s\n", attrib[0], size, formshort_time, find_data->cFileName);
+    fprintf(file, "%c%c %12lu %s %s\n", attrib[0], attrib[1], size, formshort_time, find_data->cFileName);
 }
 
 int save_file_folder( WIN32_FIND_DATAA *find_data ) {
