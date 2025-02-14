@@ -456,8 +456,10 @@ void goroot() {
     SetCurrentDirectory(working_directory);
 }
 
+
 int setpathinternal( char *folder ) {
     char *a = folder, *b = working_directory, *c = buff2;
+    int c1;
     norm_filename(a);
     int good = 1;
     // touppercase
@@ -465,13 +467,26 @@ int setpathinternal( char *folder ) {
     int b1 = *b; if(b1 >= 97) b1 -= 32; *b = (char)b1;
     if( (*a != *b) &&  (perm & p_fCHANGEROOT) ) {
         good = 0;
-        for( int drive = 1; drive < 26; drive++ ) {
+        int drive = 1 + (a1-65);
+        if( drive > 0 && drive < 26 ) {
             if( _chdrive( drive ) == 0 ) {
                 GetCurrentDirectory(3000,buff2);
-                int c1 = *c; if(c1 >= 97) c1 -= 32; *c = (char)c1;
+                c1 = *c; if(c1 >= 97) c1 -= 32; *c = (char)c1;
                 if( *a == *c ) {
                     good = 1;
-                    break;
+                }
+            }
+        }
+        if(!good) {
+            // can throw an error on a device
+            for( drive = 1; drive < 26; drive++ ) {
+                if( _chdrive( drive ) == 0 ) {
+                    GetCurrentDirectory(3000,buff2);
+                    c1 = *c; if(c1 >= 97) c1 -= 32; *c = (char)c1;
+                    if( *a == *c ) {
+                         good = 1;
+                         break;
+                    }
                 }
             }
         }
@@ -479,7 +494,12 @@ int setpathinternal( char *folder ) {
     if( good ) {
         good = ( SetCurrentDirectory(folder) ? 1 : 0 );
         }
-    GetCurrentDirectory(3000, working_directory);
+    if( good ) {
+        GetCurrentDirectory(3000, working_directory);      
+    }
+    else {
+        SetCurrentDirectory(working_directory);
+    }
     printf("currently: %s\n", working_directory);
     return good;
 }

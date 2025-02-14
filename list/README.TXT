@@ -5,8 +5,9 @@ Modern windows can list all files and folder by using command
  DIR *.* /s /a:h > DLIST.TXT
 
 Older windows could not do it properly.
-The dir command was DOS based 8 chars max. and produced filenames as C:\Progra~1\...
-on a FAT disk. UTF8 wasn't the main standard till XP times, as I remember.
+The "dir" command at the beginning was a DOS command for 8 chars max.filenames.
+This produced lists of files (on FAT disks) named as C:\Progra~1\... .
+UTF8 wasn't the main standard till XP times, as I remember.
 NTFS introduced 2-byte character filenames in various encodings for different languages.
 This had "splitted" programming C functions into two cases as
  CreateDirectoryA (8-bit), CreateDirectoryW (16-bit), and lots of others, of course.
