@@ -33,3 +33,8 @@ So, introducing tools:
                 But only if NTFS supports these functions. Maybe PC has FAT disks.
                 This can be used for modern PCs too while Microsoft Win32 applications are valid.
                 But can use DIR command instead.
+
+
+After can open "view" folder and run list2htm.exe tool.
+This creates a browsable dlist.htm from the DLIST.TXT file (place in current folder)
+to spot easily most space consuming folders and find large caches and tmp-files on disks. 
