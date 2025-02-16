@@ -111,13 +111,13 @@ void trunc_all( char *path ) {
 }
 
 void addString( char *s ) {
-	while(1) {
-		*S = *s;
-		if(*S == '\0') break;
-		S++; s++;
-		Slen++;
-	}
-	*(++S) = '\0';
+    while(1) {
+        *S = *s;
+        if(*S == '\0') break;
+        S++; s++;
+        Slen++;
+    }
+    *(++S) = '\0';
 }
 
 void parse_dlist() {
@@ -128,8 +128,8 @@ void parse_dlist() {
         return;
     }
 
-	S = S0; Slen = 0;
-	
+    S = S0; Slen = 0;
+    
     Parent_I = 0;
     Ecnt = 0; Fcnt = 0;
     cur_folder[0] = '\0';
@@ -150,8 +150,8 @@ void parse_dlist() {
             trunc_all(P);
             add_last_slash(P);
             F->nr_I = Fcnt;
-			F->Path = S;
-			addString(P);
+            F->Path = S;
+            addString(P);
             F++; Fcnt++;
             Parent_I++;
         } else {
@@ -174,22 +174,22 @@ void parse_dlist() {
             while(*L == ' ') L++;
             while(*L != ' ') L++;    // skip yyyy
             while(*L == ' ') L++;        // locate name of the file
-			trunc_all(L);
-			E->Name = S;
-			addString(L);
+            trunc_all(L);
+            E->Name = S;
+            addString(L);
             sprintf( E->Lastmod_date, "%s %s %s", mmm, dd, yyyy ); 
             E->nr = Ecnt++;
             E++;
         }
-	
-		if(Slen >= (MALLOC_STRINGS - 2000)) {
-			err_flag |= 4;
-			return;
-			}
+    
+        if(Slen >= (MALLOC_STRINGS - 2000)) {
+            err_flag |= 4;
+            return;
+            }
     }
     fclose(file);
     printf("%d entities\n",Ecnt);
-	printf("StrLen:%lu, FoldCnt:%lu, FileCnt:%u\n", Slen, Fcnt, Ecnt);
+    printf("StrLen:%lu, FoldCnt:%lu, FileCnt:%u\n", Slen, Fcnt, Ecnt);
     E--; F--;
 }
 
@@ -469,26 +469,26 @@ void display() {
 }
 
 int main() {
-	S0 = malloc( MALLOC_STRINGS );
+    S0 = malloc( MALLOC_STRINGS );
     E0 = malloc( sizeof(Entity) * MALLOC_ENTITIES_FILES );
     F0 = malloc( sizeof(FolderEntity) * MALLOC_ENTITIES_FOLDERS );
     printf("Parsing file %s for consumed space above 20Mb.\n", filenameTxt);
     parse_dlist();
-	if(err_flag&4) printf("Out of memory, too large paths and filenames.\n");
-	else {
-		printf("Calculating sizes of folders...\n");
-		calc_sizes();
-		printf("\nDetailed...\n");
-		remove_small_sizes();
-		printf("\nWriting %s...\n", filenameHtm);
-		make_html();
-		display();
-		}
-	if(err_flag&1) printf("There were errors while processing.\n");
+    if(err_flag&4) printf("Out of memory, too large paths and filenames.\n");
+    else {
+        printf("Calculating sizes of folders...\n");
+        calc_sizes();
+        printf("\nDetailed...\n");
+        remove_small_sizes();
+        printf("\nWriting %s...\n", filenameHtm);
+        make_html();
+        display();
+        }
+    if(err_flag&1) printf("There were errors while processing.\n");
     if(err_flag&2) printf("Hidden system folders not accessible,\nor filename decoding errors in list.\n");
     printf("Ok\n");
     free(F0);
     free(E0);
-	free(S0);
+    free(S0);
     return 0;
 }
