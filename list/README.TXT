@@ -1,7 +1,8 @@
 Intended to observe the content of an old PC. Or a new one.
+Unfortunately it does not finds hidden system folders.
+Then use DIR command.
 
-Modern windows can list all files and folder by using command
-
+Modern windows can list all files and folder by using command.
  DIR *.* /s /a:h > DLIST.TXT
 
 Older windows could not do it properly.
@@ -34,7 +35,11 @@ So, introducing tools:
                 This can be used for modern PCs too while Microsoft Win32 applications are valid.
                 But can use DIR command instead.
 
+The output file is easy to read sequentially. Such a small bonus.
 
 After can open "view" folder and run list2htm.exe tool.
 This creates a browsable dlist.htm from the DLIST.TXT file (place in current folder)
-to spot easily most space consuming folders and find large caches and tmp-files on disks. 
+to spot easily most space consuming folders and find large caches and tmp-files on disks.
+But not the hidden Windows system files.
+
+
