@@ -23,13 +23,15 @@
 
 #define SIZE_ABOVE_IN_LIST (20*1024*1024)
 
-#define MALLOC_ENTITIES_FOLDERS (1*1000*1000)
-#define MALLOC_ENTITIES_FILES (4*1000*1000)
+#define MALLOC_ENTITIES_FOLDERS (2*1000*1000)
+#define MALLOC_ENTITIES_FILES (20*1000*1000)
 
+// 800Mb for strings
+#define MALLOC_STRINGS (800*1000*1000)
 
 typedef struct Entity {
     unsigned int Parent_I;
-    char Name[2000];
+    char *Name;
     unsigned long long Size;
     char Lastmod_date[20];
     int Folder;
@@ -42,7 +44,7 @@ typedef struct Entity {
 
 typedef struct FolderEntity {
     unsigned int nr_I;
-    char Path[3000];
+    char *Path;
 } FolderEntity;
 
 char line[3000];
@@ -54,6 +56,8 @@ int err_flag = 0;
 Entity *E0, *E;
 FolderEntity *F0, *F;
 char *P = cur_folder;
+char *S0, *S;
+unsigned int Slen;
 
 unsigned int Ecnt;
 unsigned int Fcnt;
@@ -106,6 +110,16 @@ void trunc_all( char *path ) {
     str_trunc(C);
 }
 
+void addString( char *s ) {
+	while(1) {
+		*S = *s;
+		if(*S == '\0') break;
+		S++; s++;
+		Slen++;
+	}
+	*(++S) = '\0';
+}
+
 void parse_dlist() {
     
     file = fopen(filenameTxt, "r");
@@ -114,6 +128,8 @@ void parse_dlist() {
         return;
     }
 
+	S = S0; Slen = 0;
+	
     Parent_I = 0;
     Ecnt = 0; Fcnt = 0;
     cur_folder[0] = '\0';
@@ -134,7 +150,8 @@ void parse_dlist() {
             trunc_all(P);
             add_last_slash(P);
             F->nr_I = Fcnt;
-            strcpy( F->Path, P);
+			F->Path = S;
+			addString(P);
             F++; Fcnt++;
             Parent_I++;
         } else {
@@ -157,16 +174,22 @@ void parse_dlist() {
             while(*L == ' ') L++;
             while(*L != ' ') L++;    // skip yyyy
             while(*L == ' ') L++;        // locate name of the file
-            strcpy( E->Name, L );
-
+			trunc_all(L);
+			E->Name = S;
+			addString(L);
             sprintf( E->Lastmod_date, "%s %s %s", mmm, dd, yyyy ); 
-            trunc_all( E->Name );
             E->nr = Ecnt++;
             E++;
         }
+	
+		if(Slen >= (MALLOC_STRINGS - 2000)) {
+			err_flag |= 4;
+			return;
+			}
     }
     fclose(file);
     printf("%d entities\n",Ecnt);
+	printf("StrLen:%lu, FoldCnt:%lu, FileCnt:%u\n", Slen, Fcnt, Ecnt);
     E--; F--;
 }
 
@@ -446,21 +469,26 @@ void display() {
 }
 
 int main() {
+	S0 = malloc( MALLOC_STRINGS );
     E0 = malloc( sizeof(Entity) * MALLOC_ENTITIES_FILES );
     F0 = malloc( sizeof(FolderEntity) * MALLOC_ENTITIES_FOLDERS );
     printf("Parsing file %s for consumed space above 20Mb.\n", filenameTxt);
     parse_dlist();
-    printf("Calculating sizes of folders...\n");
-    calc_sizes();
-    printf("\nDetailed...\n");
-    remove_small_sizes();
-    printf("\nWriting %s...\n", filenameHtm);
-    make_html();
-    display();
-    if(err_flag&1) printf("There were errors while processing.\n");
+	if(err_flag&4) printf("Out of memory, too large paths and filenames.\n");
+	else {
+		printf("Calculating sizes of folders...\n");
+		calc_sizes();
+		printf("\nDetailed...\n");
+		remove_small_sizes();
+		printf("\nWriting %s...\n", filenameHtm);
+		make_html();
+		display();
+		}
+	if(err_flag&1) printf("There were errors while processing.\n");
     if(err_flag&2) printf("Hidden system folders not accessible,\nor filename decoding errors in list.\n");
     printf("Ok\n");
     free(F0);
     free(E0);
+	free(S0);
     return 0;
 }
