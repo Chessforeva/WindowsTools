@@ -1,5 +1,5 @@
 Intended to observe the content of an old PC. Or a new one.
-Unfortunately it does not finds hidden system folders.
+Unfortunately it does not find hidden system folders.
 Then use DIR command.
 
 Modern windows can list all files and folder by using command.
