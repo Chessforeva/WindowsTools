@@ -42,4 +42,14 @@ This creates a browsable dlist.htm from the DLIST.TXT file (place in current fol
 to spot easily most space consuming folders and find large caches and tmp-files on disks.
 But not the hidden Windows system files.
 
+Advice:
+If You wonder what takes so much space on Your harddisk where Windows is, then
+open Properties of the Disk, then "Disk Cleanup" and press button "Clean up system files".
+You will discover Gb of updates accumulated during years. Clear it.
+The other thing is Google Chrome can accumulate Gb in cache.
+Also various development platforms as Visual Studio simply collect files in folders.
+Anyway, there is a .py script for spotting:
+ https://github.com/Chessforeva/various / dir_size
+This does it well.
 
+Maybe will make something else someday.
