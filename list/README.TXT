@@ -51,3 +51,11 @@ Also various development platforms as Visual Studio simply collect files in fold
 Anyway, there is a .py script for spotting:
  https://github.com/Chessforeva/various / dir_size
 This does it well.
+
+The current version tries to set the folder and then read files in it. This does not work on
+hidden system folders. It would be right to search files without changing current folder. Sure.
+But, this way dlist.htm easily spots viruses. Because viruses set their folders as hidden system parts.
+Take a look under the list for unaccessed folders for names known as trojans or malwares.
+Also imprtant is folder modification time. If it is modified by a virus, all the folders with
+the same modification time should be deleted, or renamed, or observed anyway. Regedit and permissions.
+Anyway, keep PC clean. Windows Defender is good.
