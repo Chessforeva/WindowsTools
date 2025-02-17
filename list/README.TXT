@@ -1,6 +1,4 @@
-Intended to observe the content of an old PC. Or a new one.
-Unfortunately it does not find hidden system folders.
-Then use DIR command.
+Intended to observe the content of an old PC. Or a new one too.
 
 Modern windows can list all files and folder by using command.
  DIR *.* /s /a:h > DLIST.TXT
@@ -19,6 +17,9 @@ function for these 2-byte character names, the system could open a file or
 simply return an error "File or folder not found".
 
 So, introducing tools:
+
++ list_x64.exe  for Windows 10, 11. MSStudio 2022 C++ compiled. 16bit wide filenames
+                (new, made it too, because it works)
 
 + list95.exe    for Win95, compiled with TinyC compiler (FindFileFirstA function)
                 (remember that modern windows deletes it)
@@ -40,7 +41,6 @@ The output file is easy to read sequentially. Such a small bonus.
 After can open "view" folder and run list2htm.exe tool.
 This creates a browsable dlist.htm from the DLIST.TXT file (place in current folder)
 to spot easily most space consuming folders and find large caches and tmp-files on disks.
-But not the hidden Windows system files.
 
 Advice:
 If You wonder what takes so much space on Your harddisk where Windows is, then
@@ -51,5 +51,3 @@ Also various development platforms as Visual Studio simply collect files in fold
 Anyway, there is a .py script for spotting:
  https://github.com/Chessforeva/various / dir_size
 This does it well.
-
-Maybe will make something else someday.

@@ -36,6 +36,7 @@ typedef struct Entity {
     char Lastmod_date[20];
     int Folder;
     int Hidden;
+    int System;
     int nolist;
     unsigned int nr;
     unsigned int up_nr;
@@ -47,6 +48,9 @@ typedef struct FolderEntity {
     char *Path;
 } FolderEntity;
 
+char errFolders[1000][3000];
+int errFoldCnt = 0;
+
 char line[3000];
 char cur_folder[3000];
 char buf[3000];
@@ -54,7 +58,7 @@ char bu2[3000];
 int err_flag = 0;
 
 Entity *E0, *E;
-FolderEntity *F0, *F;
+FolderEntity *F0, *F, *f_last;
 char *P = cur_folder;
 char *S0, *S;
 unsigned int Slen;
@@ -134,6 +138,7 @@ void parse_dlist() {
     Ecnt = 0; Fcnt = 0;
     cur_folder[0] = '\0';
     E = E0; F = F0;    
+    char *L;
     
     while (fgets(line, sizeof(line), file)) {
         str_trunc(line);
@@ -141,6 +146,16 @@ void parse_dlist() {
         strcpy( buf, line );
         buf[5] = '\0';
         if( strcmp( buf, "Error" ) == 0 ) {
+            L = strstr( &buf[6], "set: ");
+            if( L != NULL ) {
+                if (errFoldCnt<999) strcpy( errFolders[errFoldCnt++], &L[5] );
+            }
+            else {
+                L = strstr( &buf[6], "reading folder");
+                if( L != NULL ) {
+                    if (errFoldCnt<999) strcpy( errFolders[errFoldCnt++], f_last->Path );
+                }
+            }
             err_flag |= 2;
             continue;
         }
@@ -152,14 +167,16 @@ void parse_dlist() {
             F->nr_I = Fcnt;
             F->Path = S;
             addString(P);
+            f_last = F;
             F++; Fcnt++;
             Parent_I++;
         } else {
             char mmm[4], dd[3], yyyy[5];
-            char *L = line;
+            L = line;
             E->Parent_I = (Parent_I-1);
             E->Folder = ((*(L++) == 'D') ? 1 : 0);
             E->Hidden = ((*(L++) == 'H') ? 1 : 0);
+            E->System = ((*(L++) == 'S') ? 1 : 0);
             E->nolist = 0;
             sscanf(L, "%llu %s %s %s", &E->Size, &mmm, &dd, &yyyy);
             
@@ -397,7 +414,7 @@ void make_html() {
     fprintf( file, ".v{background-color:#c3b4a1}\n.b{background-color:#ff683e}\n" );
     fprintf( file, ".u{background-color:#0aee01}\n.w{background-color:#8a2be2}\n" );
     to_safe_html( F0->Path, 0 );
-    fprintf( file, "</STYLE></HEAD>\n<BODY ONLOAD='T(%lu);S(0,\"%s\")'>\n", Ecnt, buf );
+    fprintf( file, "</STYLE></HEAD>\n<BODY ONLOAD='T(%lu);S(0,\"%s\")'>\n", Ecnt + errFoldCnt+ 999, buf );
     make_consumed_str( consumedTotal(), buf );
     fprintf( file, "<DIV id=\"DT\" class=\"%s\" style=\"width:100px\">%s</DIV>\n", colCSS[colpal], buf );
     fprintf( file, "<DIV id=\"DP\" class=\"c\"></DIV>\n" );
@@ -431,6 +448,7 @@ void make_html() {
                     fprintf( file, "<TR class=\"y\">");    
                 }
                 if(e->Hidden) strcat( atrb, "H" );
+                if(e->System) strcat( atrb, "S" );
                 fprintf( file, "<TD>%s</TD>", atrb );
                 to_safe_html( e->Name, 0 );
                 fprintf( file, "<TD><DIV id=\"V%lu\">%s</DIV></TD>", (Ecnt-i), buf );
@@ -449,6 +467,18 @@ void make_html() {
         }
         fprintf( file, "</TABLE></DIV>\n" );
     }
+    fprintf( file, "</DIV><BR><BR>\n" );
+    fprintf( file, "<DIV id=\"DE\" class=\"c\">\n" );
+    if(errFoldCnt) {
+        fprintf( file, "<TABLE>\n" );
+        fprintf( file, "<TR><TD class=\"a\" onclick=H()>" );
+        fprintf( file, "Click to hide. Could not set these folders:</TD></TR>\n");
+        for( i = 0; i < errFoldCnt; i++ ) {
+            to_safe_html( errFolders[i], 0 );
+            fprintf( file, "<TR><TD class=\"c\"><DIV id=\"V%lu\">%s</DIV></TD></TR>\n", Ecnt + (i+10), buf );
+        }
+        fprintf( file, "</TABLE>\n" );
+    }
     fprintf( file, "</DIV>\n" );
 
     // add a javascript mouse click and decoding of text on load
@@ -456,6 +486,7 @@ void make_html() {
     fprintf( file, "function D(p){for(u=\"\",j=0;j<p.length;j++){x=p[j];u+=(x=='{'?");
     fprintf( file, "String.fromCharCode(parseInt(\"0x\"+p.substr((++j),2),16))+((j+=2)?'':''):x)}}\n");
     fprintf( file, "function T(j){while(j>=0){s=G(\"V\"+j);if(s!=null){u=s.innerHTML;D(u);s.innerHTML=u};j--}}");
+    fprintf( file, "function H(){s=G(\"DE\").style;s.visibility=\"hidden\";s.height=\"0px\"}");
     fprintf( file, "function Z(K,L){s=G(\"D\"+K).style;s.visibility=(L?\"visible\":\"hidden\");s.height=(L?\"400px\":\"0px\")}\n");
     fprintf( file, "s={};A=[];I=0;j=0;u=\"\";x=0;\nfunction S(n,p){Z(I,0);I=n;Z(I,1);D(p);G(\"DP\").innerHTML=u}</SCRIPT>\n");    
     
