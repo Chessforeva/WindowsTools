@@ -21,6 +21,15 @@ So, introducing tools:
 + list_x64.exe  for Windows 10, 11. MSStudio 2022 C++ compiled. 16bit wide filenames
                 (new, made it too, because it works)
 
++ list_hs.exe [<folder>]     for Windows 10, 11. MSStudio 2022 C++ compiled. 16bit wide filenames
+                             This searches all folders possible including hidden system.
+                             Good to see all consumed space, but maybe bad to spot
+                             inaccessible folders. It does not try set as current,
+                             only reads folder information. Anyway, other approach may give
+                             different results. This is the most recent build.
+                             So, use list_hs C:\  and list2htm  after to brow results.
+
+--- older win-------------
 + list95.exe    for Win95, compiled with TinyC compiler (FindFileFirstA function)
                 (remember that modern windows deletes it)
                 Of course, Win98,XP. But 8-bit only.

@@ -25,9 +25,6 @@ wchar_t* buffer_sub, * sub;
 FILE* file;
 const wchar_t* months[] = { L"Jan", L"Feb", L"Mar", L"Apr", L"May", L"Jun", L"Jul", L"Aug", L"Sep", L"Oct", L"Nov", L"Dec" };
 char attrib[20];
-char formatted_time[30];
-char formshort_time[30];
-wchar_t formshort_timeW[30];
 
 void get_attributes(WIN32_FIND_DATAW* find_data) {
     DWORD w = (DWORD)find_data->dwFileAttributes;
@@ -42,13 +39,12 @@ void list_file_folder(WIN32_FIND_DATAW* find_data) {
     SYSTEMTIME st;
     FileTimeToSystemTime(&find_data->ftLastWriteTime, &st); // Now using FileTimeToSystemTime   
 
-
     ULARGE_INTEGER fileSize;
     fileSize.HighPart = find_data->nFileSizeHigh;
     fileSize.LowPart = find_data->nFileSizeLow;
+    unsigned long long size = fileSize.QuadPart;
 
-    fwprintf(file, L"%c%c%c %12llu %ls %02d %04d %ls\n", attrib[0], attrib[1], attrib[2], fileSize, months[st.wMonth-1], st.wDay, st.wYear, find_data->cFileName);
-
+    fwprintf(file, L"%c%c%c %16llu %ls %02d %04d %ls\n", attrib[0], attrib[1], attrib[2], fileSize, months[st.wMonth-1], st.wDay, st.wYear, find_data->cFileName);
 }
 
 int save_file_folder(WIN32_FIND_DATAW* find_data) {
@@ -152,7 +148,7 @@ int main(int argc, char** argv) {
     wprintf(L"Scanning directories and writing %s....\n", output);
     dirlist(0);
     printf("ok\n");
-    fclose(file);
+    if(file) fclose(file);
     free(buffer_sub);
     free(buffer_poi);
     free(buffer_pth);
