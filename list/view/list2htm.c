@@ -205,7 +205,6 @@ void parse_dlist() {
             }
     }
     fclose(file);
-    printf("%d entities\n",Ecnt);
     printf("StrLen:%lu, FoldCnt:%lu, FileCnt:%u\n", Slen, Fcnt, Ecnt);
     E--; F--;
 }
@@ -310,7 +309,6 @@ void calc_sizes() {
         e--;
     }
 }
-
 
 void remove_small_sizes() {
     

@@ -51,6 +51,13 @@ After can open "view" folder and run list2htm.exe tool.
 This creates a browsable dlist.htm from the DLIST.TXT file (place in current folder)
 to spot easily most space consuming folders and find large caches and tmp-files on disks.
 
+Also there is a tool dir2htm.exe that creates a browsable o.htm file after DIR 
+  DIR *.* /s /a > o.txt
+  dir2htm.exe o.txt o.htm
+
+This is for consumed diskspace observation, not a detailed finding of hidden small files.
+Sometimes I just need to check my disks.
+
 Advice:
 If You wonder what takes so much space on Your harddisk where Windows is, then
 open Properties of the Disk, then "Disk Cleanup" and press button "Clean up system files".
