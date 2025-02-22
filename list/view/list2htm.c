@@ -37,6 +37,7 @@ typedef struct Entity {
     int Folder;
     int Hidden;
     int System;
+	int Junction;
     int nolist;
     unsigned int nr;
     unsigned int up_nr;
@@ -177,6 +178,7 @@ void parse_dlist() {
             E->Folder = ((*(L++) == 'D') ? 1 : 0);
             E->Hidden = ((*(L++) == 'H') ? 1 : 0);
             E->System = ((*(L++) == 'S') ? 1 : 0);
+			E->Junction = ((*(L++) == 'J') ? 1 : 0);
             E->nolist = 0;
             sscanf(L, "%llu %s %s %s", &E->Size, &mmm, &dd, &yyyy);
             
@@ -288,7 +290,9 @@ void calc_sizes() {
                 // also saves pointer information
                 par_I = e->Parent_I;
                 e->nextFolder_I = e1->Parent_I;
-                e->Size += e1->Size;
+				if(!e1->Junction) {
+					e->Size += e1->Size;		// Junctions are just visible
+				}
                 par_nr = e->nr;
                 
                 e = e1; f = f1;
@@ -447,6 +451,7 @@ void make_html() {
                 }
                 if(e->Hidden) strcat( atrb, "H" );
                 if(e->System) strcat( atrb, "S" );
+				if(e->Junction) strcat( atrb, "J" );
                 fprintf( file, "<TD>%s</TD>", atrb );
                 to_safe_html( e->Name, 0 );
                 fprintf( file, "<TD><DIV id=\"V%lu\">%s</DIV></TD>", (Ecnt-i), buf );

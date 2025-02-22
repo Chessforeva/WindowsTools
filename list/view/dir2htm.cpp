@@ -43,6 +43,7 @@ typedef struct Entity {
     unsigned long long Size;
     char Lastmod_date[20];
     int Folder;
+    int Junction;
     int nolist;
     unsigned int nr;
     unsigned int up_nr;
@@ -206,6 +207,7 @@ void analyze_dir(char* line) {
             X = strchr(C, '[');
             if (X != NULL) {
                 *X = '\0';      // JUNCTION or SYMLINKD
+                E->Junction = 1;
             }
             E->Parent_I = (Parent_I - 1);
             E->nolist = 0;
@@ -399,7 +401,9 @@ void calc_sizes() {
                 // also saves pointer information
                 par_I = e->Parent_I;
                 e->nextFolder_I = e1->Parent_I;
-                e->Size += e1->Size;
+                if (!e1->Junction) {
+                    e->Size += e1->Size;
+                }
                 par_nr = e->nr;
 
                 e = e1; f = f1;
@@ -551,6 +555,9 @@ void make_html() {
                     to_safe_html(f2->Path, 0);
                     fprintf(file, "<TR onclick='S(%lu,\"%s\")' class=\"a\">", e->nextFolder_I, buf);
                     strcat(atrb, "D");
+                    if (e->Junction) {
+                        strcat(atrb, "J");
+                    }
                 }
                 else {
                     fprintf(file, "<TR class=\"y\">");

@@ -36,7 +36,9 @@ void get_attributes( WIN32_FIND_DATAW *find_data ) {
     for(int i=0; i<5; i++) attrib[i]=' ';
     if( w & FILE_ATTRIBUTE_DIRECTORY ) attrib[0] = 'D';
     if( w & FILE_ATTRIBUTE_HIDDEN ) attrib[1] = 'H';
-    attrib[3]=0;
+    if( w & FILE_ATTRIBUTE_SYSTEM ) attrib[2] = 'S';
+    if( w & FILE_ATTRIBUTE_REPARSE_POINT ) attrib[3] = 'J';
+    attrib[4]=0;
 }
 
 void list_file_folder( WIN32_FIND_DATAW *find_data ) {
@@ -44,7 +46,9 @@ void list_file_folder( WIN32_FIND_DATAW *find_data ) {
     SYSTEMTIME st;
     FileTimeToSystemTime( &find_data->ftLastWriteTime, &st); // Now using FileTimeToSystemTime    
     DWORD size = find_data->nFileSizeLow;    // under 4GB
-    fwprintf(file, L"%c%c %12lu %ls %02d %04d %ls\n", attrib[0], attrib[1], size, months[st.wMonth-1], st.wDay, st.wYear, find_data->cFileName);
+    fwprintf(file, L"%c%c%c%c %12lu %ls %02d %04d %ls\n",
+        attrib[0], attrib[1], attrib[2], attrib[3],
+        size, months[st.wMonth-1], st.wDay, st.wYear, find_data->cFileName);
 }
 
 int save_file_folder( WIN32_FIND_DATAW *find_data ) {

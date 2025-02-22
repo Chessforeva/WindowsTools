@@ -56,7 +56,9 @@ Also there is a tool dir2htm.exe that creates a browsable o.htm file after DIR
   dir2htm.exe o.txt o.htm
 
 This is for consumed diskspace observation, not a detailed finding of hidden small files.
-Sometimes I just need to check my disks.
+Sometimes I just need to check my disks. By the way, DIR command does not find all files
+in one listing, should find by parts with additional options for hidden: DIR *.* /s /a:h
+But these cases are not developed in dir2htm currently. Only DIR *.* /s /a listing of the most.
 
 Advice:
 If You wonder what takes so much space on Your harddisk where Windows is, then
@@ -70,8 +72,9 @@ This does it well.
 
 The current version tries to set the folder and then read files in it. This does not work on
 hidden system folders. It would be right to search files without changing current folder. Sure.
-But, this way dlist.htm easily spots viruses. Because viruses set their folders as hidden system parts.
+But, this way dlist.htm easily spots viruses, which mark their folders as hidden system parts.
 Take a look under the list for unaccessed folders for names known as trojans or malwares.
-Also imprtant is folder modification time. If it is modified by a virus, all the folders with
-the same modification time should be deleted, or renamed, or observed anyway. Regedit and permissions.
-Anyway, keep PC clean. Windows Defender is good.
+Also imprtant is the last modification time of a folder. If it is modified by a virus, then all
+folders with the same modification time should be deleted, or renamed, or manually reviewed.
+Slow and painful work guaranteed with powershell, regedit and windows permissions.
+Anyway, keep PC clean. Windows Defender is good, it really fights.
